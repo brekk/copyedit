@@ -1,0 +1,11 @@
+import { env, tagWithScope } from "PartyBus"
+
+
+
+export TAGS = {
+  info: tagWithScope("copyedit", ["info"]),
+  detail: tagWithScope("copyedit", ["detail"]),
+  verbose: tagWithScope("copyedit", ["verbose"]),
+}
+
+export log = { info: env(TAGS.info), detail: env(TAGS.detail), verbose: env(TAGS.verbose) }

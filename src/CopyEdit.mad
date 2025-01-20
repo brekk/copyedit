@@ -1,0 +1,128 @@
+import Array from "Array"
+import ByteArray from "ByteArray"
+import Integer from "Integer"
+import List from "List"
+import Math from "Math"
+import String from "String"
+
+import { log } from "@/Log"
+
+
+
+export alias DistanceConfig = {
+  useDamerau :: Boolean,
+  weights :: { delete :: Byte, insert :: Byte, substitute :: Byte },
+}
+
+export DEFAULT_CONFIG = { useDamerau: true, weights: { delete: 1_b, insert: 1_b, substitute: 1_b } }
+
+// https://github.com/mrshu/node-weighted-damerau-levenshtein/blob/master/index.js used as a base reference
+
+// distanceWithConfig :: DistanceConfig -> String -> String -> List (List (Maybe Float))
+export distanceGrid = (config, a, b) => {
+  log.info("config", config)
+  lenX = String.length(a)
+  lenY = String.length(b)
+  return if (lenX == 0) {
+    log.detail(
+      "a is empty",
+      Array.fromList([ByteArray.fromList([Integer.toByte(lenY) * config.weights.insert])]),
+    )
+  } else if (lenY == 0) {
+    log.detail(
+      "b is empty",
+      Array.fromList([ByteArray.fromList([Integer.toByte(lenX) * config.weights.delete])]),
+    )
+  } else do {
+    table = pipe(
+      Integer.toByte,
+      Math.add(1_b),
+      List.range(0_b),
+      map(
+        (x) => pipe(
+          Integer.toByte,
+          Math.add(1_b),
+          List.range(0_b),
+          map((y) => x == 0 ? y : y == 0 ? x : 0),
+          ByteArray.fromList,
+        )(lenY),
+      ),
+      Array.fromList,
+    )(lenX)
+
+    log.verbose("initial table", table)
+
+    i = 1
+    j = 1
+
+    while(i <= lenX) do {
+      while(j <= lenY) do {
+        log.verbose("(" ++ show(i) ++ ", " ++ show(j) ++ ")", table)
+        _prevA = String.charAt(i - 1, a)
+        _prevB = String.charAt(j - 1, b)
+        _subCost = _prevA == _prevB ? 0 : config.weights.substitute
+        prevRow = Array.unsafeAt(i - 1, table)
+        at = ByteArray.unsafeAt
+        delCost = pipe(
+          at(j),
+          Math.add(config.weights.substitute),
+        )(prevRow)
+        insCost = pipe(
+          Array.unsafeAt(i),
+          at(j - 1),
+          Math.add(config.weights.insert),
+        )(table)
+        subCost = pipe(
+          at(j - 1),
+          Math.add(_subCost),
+        )(prevRow)
+        least = (
+          delCost < insCost
+            ? (delCost < subCost ? delCost : subCost)
+            : subCost < insCost ? subCost : insCost
+        )
+        min = if (config.useDamerau) do {
+          _prevA2 = String.charAt(i - 2, a)
+          _prevB2 = String.charAt(j - 2, b)
+          return if (i > 1 && j > 1 && _prevA == _prevB2 && _prevA2 == _prevB) do {
+            transCost = pipe(
+              Array.unsafeAt(i - 2),
+              ByteArray.unsafeAt(j - 2),
+            )(table)
+              + _subCost
+            return if (transCost < least) {
+              transCost
+            } else {
+              least
+            }
+          } else {
+            least
+          }
+        } else {
+          least
+        }
+
+        pipe(
+          Array.unsafeAt(i),
+          (row) => do {
+            ByteArray.unsafeSet(j, min, row)
+            Array.unsafeSet(i, row, table)
+          },
+        )(table)
+        j := j + 1
+      }
+      i := i + 1
+      j := 1
+    }
+    return table
+  }
+}
+
+export distanceWithConfig = (config, a, b) => pipe(
+  distanceGrid(config, a),
+  Array.unsafeAt(String.length(a)),
+  ByteArray.unsafeAt(String.length(b)),
+)(b)
+
+
+export distance = distanceWithConfig(DEFAULT_CONFIG)

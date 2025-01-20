@@ -1,0 +1,71 @@
+import Array from "Array"
+import ByteArray from "ByteArray"
+import IO from "IO"
+import List from "List"
+import String from "String"
+import { assertEquals, test } from "Test"
+
+import { caseN2, report } from "Study"
+
+import { DEFAULT_CONFIG, distance, distanceGrid, distanceWithConfig } from "@/CopyEdit"
+
+
+
+report(
+  distanceGrid(DEFAULT_CONFIG, "madlib"),
+  "distanceGrid(madlib)",
+  [
+    #[
+      "javascript",
+      Array.fromList([
+        ByteArray.fromList([0_b, 1_b, 2_b, 3_b, 4_b, 5_b, 6_b, 7_b, 8_b, 9_b, 10_b]),
+        ByteArray.fromList([1_b, 1_b, 2_b, 3_b, 4_b, 5_b, 6_b, 7_b, 8_b, 9_b, 10_b]),
+        ByteArray.fromList([2_b, 2_b, 1_b, 2_b, 3_b, 4_b, 5_b, 6_b, 7_b, 8_b, 9_b]),
+        ByteArray.fromList([3_b, 3_b, 2_b, 2_b, 3_b, 4_b, 5_b, 6_b, 7_b, 8_b, 9_b]),
+        ByteArray.fromList([4_b, 4_b, 3_b, 3_b, 3_b, 4_b, 5_b, 6_b, 7_b, 8_b, 9_b]),
+        ByteArray.fromList([5_b, 5_b, 4_b, 4_b, 4_b, 4_b, 5_b, 6_b, 6_b, 7_b, 8_b]),
+        ByteArray.fromList([6_b, 6_b, 5_b, 5_b, 5_b, 5_b, 5_b, 6_b, 7_b, 7_b, 8_b]),
+      ]),
+    ],
+    #["", Array.fromList([ByteArray.fromList([6_b])])],
+  ],
+)
+
+report(
+  distanceGrid(DEFAULT_CONFIG, ""),
+  "distanceGrid('')",
+  [#["madlib", Array.fromList([ByteArray.fromList([6_b])])]],
+)
+
+report(
+  distanceGrid(DEFAULT_CONFIG, "monster"),
+  "distanceGrid - transposition",
+  [
+    #[
+      "omnster",
+      Array.fromList([
+        ByteArray.fromList([0_b, 1_b, 2_b, 3_b, 4_b, 5_b, 6_b, 7_b]),
+        ByteArray.fromList([1_b, 1_b, 1_b, 2_b, 3_b, 4_b, 5_b, 6_b]),
+        ByteArray.fromList([2_b, 1_b, 1_b, 2_b, 3_b, 4_b, 5_b, 6_b]),
+        ByteArray.fromList([3_b, 2_b, 2_b, 1_b, 2_b, 3_b, 4_b, 5_b]),
+        ByteArray.fromList([4_b, 3_b, 3_b, 2_b, 1_b, 2_b, 3_b, 4_b]),
+        ByteArray.fromList([5_b, 4_b, 4_b, 3_b, 2_b, 1_b, 2_b, 3_b]),
+        ByteArray.fromList([6_b, 5_b, 5_b, 4_b, 3_b, 2_b, 1_b, 2_b]),
+        ByteArray.fromList([7_b, 6_b, 6_b, 5_b, 4_b, 3_b, 2_b, 1_b]),
+      ]),
+    ],
+    #[
+      "montser",
+      Array.fromList([
+        ByteArray.fromList([0_b, 1_b, 2_b, 3_b, 4_b, 5_b, 6_b, 7_b]),
+        ByteArray.fromList([1_b, 0_b, 1_b, 2_b, 3_b, 4_b, 5_b, 6_b]),
+        ByteArray.fromList([2_b, 1_b, 0_b, 1_b, 2_b, 3_b, 4_b, 5_b]),
+        ByteArray.fromList([3_b, 2_b, 1_b, 0_b, 1_b, 2_b, 3_b, 4_b]),
+        ByteArray.fromList([4_b, 3_b, 2_b, 1_b, 1_b, 1_b, 2_b, 3_b]),
+        ByteArray.fromList([5_b, 4_b, 3_b, 2_b, 1_b, 1_b, 2_b, 3_b]),
+        ByteArray.fromList([6_b, 5_b, 4_b, 3_b, 2_b, 2_b, 1_b, 2_b]),
+        ByteArray.fromList([7_b, 6_b, 5_b, 4_b, 3_b, 3_b, 2_b, 1_b]),
+      ]),
+    ],
+  ],
+)
