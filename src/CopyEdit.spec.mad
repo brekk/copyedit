@@ -1,15 +1,26 @@
 import Array from "Array"
 import ByteArray from "ByteArray"
+import { Just, Nothing } from "Maybe"
 
 import { report } from "Study"
 
-import { DEFAULT_CONFIG, distance, distanceGrid } from "@/CopyEdit"
+import {
+  DEFAULT_CONFIG,
+  dict,
+  distance,
+  distanceDict,
+  editTable,
+  nearest,
+  nearestAll,
+  nearestAllWithConfig,
+  nearestWithConfig,
+} from "@/CopyEdit"
 
 
 
 report(
-  distanceGrid(DEFAULT_CONFIG, "madlib"),
-  "distanceGrid(madlib)",
+  editTable(DEFAULT_CONFIG, "madlib"),
+  "editTable(madlib)",
   [
     #[
       "javascript",
@@ -28,17 +39,17 @@ report(
 )
 
 report(
-  distanceGrid(DEFAULT_CONFIG, ""),
-  "distanceGrid('')",
+  editTable(DEFAULT_CONFIG, ""),
+  "editTable('')",
   [#["madlib", Array.fromList([ByteArray.fromList([6_b])])]],
 )
 
 report(
-  distanceGrid(
+  editTable(
     { useDamerau: false, weights: { substitute: 1_b, insert: 1_b, delete: 1_b } },
     "aamadlib",
   ),
-  "distanceGrid('') -- no damerau",
+  "editTable('') -- no damerau",
   [
     #[
       "madlib",
@@ -58,8 +69,8 @@ report(
 )
 
 report(
-  distanceGrid(DEFAULT_CONFIG, "monster"),
-  "distanceGrid - transposition",
+  editTable(DEFAULT_CONFIG, "monster"),
+  "editTable - transposition",
   [
     #[
       "omnster",
@@ -134,3 +145,35 @@ report(
   "distance",
   [#["adlib", 1_b], #["madlib!", 1_b], #["maldib", 1_b], #["mua'dib", 3_b], #["aamadlib", 2_b]],
 )
+
+dictTest = report(
+  $,
+  "distanceDict",
+  [
+    #[
+      ["brush", "crush", "shush", "hush", "mush", "rust", "hunch"],
+      {{ 1_b: ["hunch"], 3_b: ["brush", "hush", "mush"], 4_b: ["crush", "shush", "rust"] }},
+    ],
+  ],
+)
+dictTest(distanceDict(DEFAULT_CONFIG, "bunch"))
+dictTest(dict("bunch"))
+
+nearestAllTest = report(
+  $,
+  "nearestAll",
+  [#[["brush", "crush", "shush", "hush", "mush", "rust", "hunch"], Just(["hunch"])]],
+)
+nearestAllTest(nearestAllWithConfig(DEFAULT_CONFIG, "bunch"))
+
+nearestAllTest(nearestAll("bunch"))
+
+nearestTest = report(
+  $,
+  "nearest",
+  [#[["brush", "crush", "shush", "hush", "mush", "rust", "hunch"], Just("hunch")]],
+)
+
+
+nearestTest(nearestWithConfig(DEFAULT_CONFIG, "bunch"))
+nearestTest(nearest("bunch"))

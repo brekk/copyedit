@@ -1,8 +1,11 @@
 import Array from "Array"
 import ByteArray from "ByteArray"
+import Dict from "Dictionary"
+import IO from "IO"
 import Integer from "Integer"
 import List from "List"
 import Math from "Math"
+import { Just, Nothing } from "Maybe"
 import String from "String"
 
 import { log } from "@/Log"
@@ -19,7 +22,7 @@ export DEFAULT_CONFIG = { useDamerau: true, weights: { delete: 1_b, insert: 1_b,
 // https://github.com/mrshu/node-weighted-damerau-levenshtein/blob/master/index.js used as a base reference
 
 // distanceWithConfig :: DistanceConfig -> String -> String -> List (List (Maybe Float))
-export distanceGrid = (config, a, b) => {
+export editTable = (config, a, b) => {
   log.info("config", config)
   lenX = String.length(a)
   lenY = String.length(b)
@@ -119,10 +122,46 @@ export distanceGrid = (config, a, b) => {
 }
 
 export distanceWithConfig = (config, a, b) => pipe(
-  distanceGrid(config, a),
+  editTable(config, a),
   Array.unsafeAt(String.length(a)),
   ByteArray.unsafeAt(String.length(b)),
 )(b)
 
 
 export distance = distanceWithConfig(DEFAULT_CONFIG)
+
+export distanceDict = (config, str, strs) => {
+  dist = distanceWithConfig(config, str)
+  return pipe(
+    map((x) => #[dist(x), x]),
+    List.reduce(
+      (agg, p) => where(p) {
+        #[i, v] =>
+          Dict.includes(i, agg)
+            ? Dict.update((ext) => List.concat(ext, [v]), i, agg)
+            : Dict.insert(i, [v], agg)
+      },
+      Dict.empty,
+    ),
+  )(strs)
+}
+
+export dict = distanceDict(DEFAULT_CONFIG)
+
+export nearestAllWithConfig = (config, str, strs) => pipe(
+  distanceDict(config, str),
+  (dct) => pipe(
+    Dict.keys,
+    List.first,
+    chain(Dict.get($, dct)),
+  )(dct),
+)(strs)
+
+export nearestAll = nearestAllWithConfig(DEFAULT_CONFIG)
+
+export nearestWithConfig = (config, str, strs) => pipe(
+  nearestAllWithConfig(config, str),
+  chain(List.first),
+)(strs)
+
+export nearest = nearestWithConfig(DEFAULT_CONFIG)
