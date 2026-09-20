@@ -8,7 +8,7 @@ import List from "List"
 import Math from "Math"
 import String from "String"
 
-import { log } from "@/Log"
+import Log from "@/Log"
 
 
 
@@ -16,26 +16,28 @@ export alias DistanceConfig = {
   useDamerau :: Boolean,
   weights :: { delete :: Byte, insert :: Byte, substitute :: Byte },
 }
-
 export DEFAULT_CONFIG = { useDamerau: true, weights: { delete: 1_b, insert: 1_b, substitute: 1_b } }
-
 // https://github.com/mrshu/node-weighted-damerau-levenshtein/blob/master/index.js used as a base reference
 
 editTable :: DistanceConfig -> String -> String -> Array ByteArray
 export editTable = (config, a, b) => {
-  log.info("config", config)
+  Log.env.info("config", config)
   lenX = String.length(a)
   lenY = String.length(b)
   return if (lenX == 0) {
-    log.detail(
-      "a is empty",
-      Array.fromList([ByteArray.fromList([Integer.toByte(lenY) * config.weights.insert])]),
-    )
+    Log
+      .env
+      .detail(
+        "a is empty",
+        Array.fromList([ByteArray.fromList([Integer.toByte(lenY) * config.weights.insert])]),
+      )
   } else if (lenY == 0) {
-    log.detail(
-      "b is empty",
-      Array.fromList([ByteArray.fromList([Integer.toByte(lenX) * config.weights.delete])]),
-    )
+    Log
+      .env
+      .detail(
+        "b is empty",
+        Array.fromList([ByteArray.fromList([Integer.toByte(lenX) * config.weights.delete])]),
+      )
   } else do {
     table = pipe(
       Integer.toByte,
@@ -53,14 +55,14 @@ export editTable = (config, a, b) => {
       Array.fromList,
     )(lenX)
 
-    log.verbose("initial table", table)
+    Log.env.verbose("initial table", table)
 
     i = 1
     j = 1
 
     while(i <= lenX) do {
       while(j <= lenY) do {
-        log.verbose("(" ++ show(i) ++ ", " ++ show(j) ++ ")", table)
+        Log.env.verbose("(" ++ show(i) ++ ", " ++ show(j) ++ ")", table)
         _prevA = String.charAt(i - 1, a)
         _prevB = String.charAt(j - 1, b)
         _subCost = _prevA == _prevB ? 0 : config.weights.substitute
@@ -120,17 +122,13 @@ export editTable = (config, a, b) => {
     return table
   }
 }
-
 distanceWithConfig :: DistanceConfig -> String -> String -> Byte
 export distanceWithConfig = (config, a, b) => pipe(
   editTable(config, a),
   Array.unsafeAt(String.length(a)),
   ByteArray.unsafeAt(String.length(b)),
 )(b)
-
-
 export distance = distanceWithConfig(DEFAULT_CONFIG)
-
 distanceDict :: DistanceConfig -> String -> List String -> Dictionary Byte (List String)
 export distanceDict = (config, str, strs) => {
   dist = distanceWithConfig(config, str)
@@ -147,9 +145,7 @@ export distanceDict = (config, str, strs) => {
     ),
   )(strs)
 }
-
 export dict = distanceDict(DEFAULT_CONFIG)
-
 nearestAllWithConfig :: DistanceConfig -> String -> List String -> Maybe (List String)
 export nearestAllWithConfig = (config, str, strs) => pipe(
   distanceDict(config, str),
@@ -159,13 +155,10 @@ export nearestAllWithConfig = (config, str, strs) => pipe(
     chain(Dict.get($, dct)),
   )(dct),
 )(strs)
-
 export nearestAll = nearestAllWithConfig(DEFAULT_CONFIG)
-
 nearestWithConfig :: DistanceConfig -> String -> List String -> Maybe String
 export nearestWithConfig = (config, str, strs) => pipe(
   nearestAllWithConfig(config, str),
   chain(List.first),
 )(strs)
-
 export nearest = nearestWithConfig(DEFAULT_CONFIG)
