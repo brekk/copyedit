@@ -1,0 +1,50 @@
+{
+  "buildHash": "03b68bb3208b52b4b4756b5a2b6e57b0",
+  "jsApi": {
+    "apiInstances": [],
+    "apiAliases": {
+      "DistanceConfig": "{ useDamerau :: Boolean, weights :: { delete :: Byte, insert :: Byte, substitute :: Byte } }"
+    },
+    "apiInterfaces": {},
+    "apiNames": {
+      "distance": "String -> String -> Byte",
+      "nearest": "String -> List String -> Maybe String",
+      "DEFAULT_CONFIG": "{ useDamerau :: Boolean, weights :: { delete :: Byte, insert :: Byte, substitute :: Byte } }",
+      "src/Log.mad#tags": "{ copyedit :: Tag, detail :: Tag, info :: Tag, verbose :: Tag }",
+      "nearestWithConfig": "{ useDamerau :: Boolean, weights :: { delete :: Byte, insert :: Byte, substitute :: Byte } } -> String -> List String -> Maybe String",
+      "dict": "String -> List String -> Dictionary Byte (List String)",
+      "src/Log.mad#env": "(Show a, Show b, Show c, Show d) => { copyedit :: String -> d -> d, detail :: String -> b -> b, info :: String -> c -> c, verbose :: String -> a -> a }",
+      "nearestAll": "String -> List String -> Maybe (List String)",
+      "nearestAllWithConfig": "{ useDamerau :: Boolean, weights :: { delete :: Byte, insert :: Byte, substitute :: Byte } } -> String -> List String -> Maybe (List String)",
+      "distanceDict": "{ useDamerau :: Boolean, weights :: { delete :: Byte, insert :: Byte, substitute :: Byte } } -> String -> List String -> Dictionary Byte (List String)",
+      "editTable": "{ useDamerau :: Boolean, weights :: { delete :: Byte, insert :: Byte, substitute :: Byte } } -> String -> String -> Array ByteArray",
+      "distanceWithConfig": "{ useDamerau :: Boolean, weights :: { delete :: Byte, insert :: Byte, substitute :: Byte } } -> String -> String -> Byte",
+      "src/Log.mad#tapped": "(Show a, Show b, Show c, Show d) => { copyedit :: String -> (e -> d) -> e -> e, detail :: String -> (f -> b) -> f -> f, info :: String -> (g -> c) -> g -> g, verbose :: String -> (h -> a) -> h -> h }"
+    },
+    "apiTypes": {}
+  },
+  "llvmApi": {
+    "apiInstances": [],
+    "apiAliases": {
+      "DistanceConfig": "{ useDamerau :: Boolean, weights :: { delete :: Byte, insert :: Byte, substitute :: Byte } }"
+    },
+    "apiInterfaces": {},
+    "apiNames": {
+      "distance": "String -> String -> Byte",
+      "nearest": "String -> List String -> Maybe String",
+      "DEFAULT_CONFIG": "{ useDamerau :: Boolean, weights :: { delete :: Byte, insert :: Byte, substitute :: Byte } }",
+      "src/Log.mad#tags": "{ copyedit :: Tag, detail :: Tag, info :: Tag, verbose :: Tag }",
+      "nearestWithConfig": "{ useDamerau :: Boolean, weights :: { delete :: Byte, insert :: Byte, substitute :: Byte } } -> String -> List String -> Maybe String",
+      "dict": "String -> List String -> Dictionary Byte (List String)",
+      "src/Log.mad#env": "(Show a, Show b, Show c, Show d) => { copyedit :: String -> d -> d, detail :: String -> b -> b, info :: String -> c -> c, verbose :: String -> a -> a }",
+      "nearestAll": "String -> List String -> Maybe (List String)",
+      "nearestAllWithConfig": "{ useDamerau :: Boolean, weights :: { delete :: Byte, insert :: Byte, substitute :: Byte } } -> String -> List String -> Maybe (List String)",
+      "distanceDict": "{ useDamerau :: Boolean, weights :: { delete :: Byte, insert :: Byte, substitute :: Byte } } -> String -> List String -> Dictionary Byte (List String)",
+      "editTable": "{ useDamerau :: Boolean, weights :: { delete :: Byte, insert :: Byte, substitute :: Byte } } -> String -> String -> Array ByteArray",
+      "distanceWithConfig": "{ useDamerau :: Boolean, weights :: { delete :: Byte, insert :: Byte, substitute :: Byte } } -> String -> String -> Byte",
+      "src/Log.mad#tapped": "(Show a, Show b, Show c, Show d) => { copyedit :: String -> (e -> d) -> e -> e, detail :: String -> (f -> b) -> f -> f, info :: String -> (g -> c) -> g -> g, verbose :: String -> (h -> a) -> h -> h }"
+    },
+    "apiTypes": {}
+  },
+  "versionHash": "25e64aa754c310d45c1e084d574c1bb0"
+}
