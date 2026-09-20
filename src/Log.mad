@@ -1,11 +1,26 @@
-import { env, tagWithScope } from "PartyBus"
+/* ★★★ copyedit@0.0.2 ★★★
+ * THIS FILE AUTOMATICALLY GENERATED FROM SOURCE: copyedit.clown-car
+ */
+
+import Party from "PartyBus"
 
 
 
-export TAGS = {
-  info: tagWithScope("copyedit", ["info"]),
-  detail: tagWithScope("copyedit", ["detail"]),
-  verbose: tagWithScope("copyedit", ["verbose"]),
+export tags = {
+  copyedit: Party.tag("copyedit"),
+  info: Party.tagWithScope("copyedit", ["info"]),
+  detail: Party.tagWithScope("copyedit", ["detail"]),
+  verbose: Party.tagWithScope("copyedit", ["verbose"]),
 }
-
-export log = { info: env(TAGS.info), detail: env(TAGS.detail), verbose: env(TAGS.verbose) }
+export env = {
+  copyedit: Party.env(tags.copyedit),
+  info: Party.env(tags.info),
+  detail: Party.env(tags.detail),
+  verbose: Party.env(tags.verbose),
+}
+export tapped = {
+  copyedit: Party.tap(env.copyedit),
+  info: Party.tap(env.info),
+  detail: Party.tap(env.detail),
+  verbose: Party.tap(env.verbose),
+}

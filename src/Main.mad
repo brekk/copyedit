@@ -1,7 +1,12 @@
 import IO from "IO"
 
+import C from "@/CopyEdit"
+
+
+
 main = () => {
   pipe(
-    IO.pTrace("Main file for:"),
+    C.nearest($, ["sloppyedit", "bodyedit", "copycat", "dopydash"]),
+    IO.pTrace("THE ANSWER"),
   )("copyedit")
 }
