@@ -1,12 +1,15 @@
 import IO from "IO"
 
-import C from "@/CopyEdit"
+import CopyEdit from "@/CopyEdit"
 
 
 
 main = () => {
-  pipe(
-    C.nearest($, ["sloppyedit", "bodyedit", "copycat", "dopydash"]),
-    IO.pTrace("THE ANSWER"),
-  )("copyedit")
+  // 1_b change
+  IO.pTrace("distance!", CopyEdit.distance("madlib", "adlib"))
+  // Just("hunch")
+  IO.pTrace(
+    "nearest!",
+    CopyEdit.nearest("bunch", ["brush", "crush", "shush", "suss", "hush", "mush", "rust", "hunch"]),
+  )
 }
